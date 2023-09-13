@@ -7,13 +7,13 @@ const app = express()
 
 // connect to mongodb & listen for requests
 const dbURI = 'mongodb+srv://omgitsmiles:fullStack21@nodetutorial.hnnptwx.mongodb.net/nodetuts?retryWrites=true&w=majority'
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }) //useNewUrlParser: true, useUnifiedTopology: true prevent deprecation warnings
     .then((result) => app.listen(3000))
     .catch((err) => console.log(err))
 
 
 // register view engine
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs') // ejs is the view engine
 
 // app.set('views', 'myviews') for custom views folder
 
@@ -65,7 +65,7 @@ app.set('view engine', 'ejs')
 
 // middleware & static files
 app.use(express.static('public'))
-
+app.use(express.urlencoded({ extended: true })) //allows us to use req.body in post requests
 app.use(morgan('dev'))
 
 // app.get('/', (req, res) => {
@@ -104,6 +104,18 @@ app.get('/blogs', (req, res) => {
             console.log(err)
         })
 })
+
+app.post('/blogs', (req, res) => {
+    const blog = new Blog(req.body)
+    blog.save()
+        .then((result) => {
+            res.redirect('/blogs')
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
 
 
 // redirects
